@@ -41,6 +41,9 @@ void tarefa_6(void);
 void tarefa_7(void);
 void tarefa_8(void);
 
+
+
+
 /*
  * Configuracao dos tamanhos das pilhas
  */
@@ -81,7 +84,7 @@ int main(void)
 	
 	CriaTarefa(tarefa_2, "Tarefa 2", PILHA_TAREFA_2, TAM_PILHA_2, 2);
 
-	CriarTarefa(tarefa_3, "Tarefa 3", PILHA_TAREFA_3, TAM_PILHA_3, 3);
+	//CriarTarefa(tarefa_3, "Tarefa 3", PILHA_TAREFA_3, TAM_PILHA_3, 3);
 	
 	/* Cria tarefa ociosa do sistema */
 	CriaTarefa(tarefa_ociosa,"Tarefa ociosa", PILHA_TAREFA_OCIOSA, TAM_PILHA_OCIOSA, 0);
@@ -106,7 +109,8 @@ void tarefa_1(void)
 	{
 		a++;
 		port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE); /* Liga LED. */
-		TarefaContinua(2);
+		TarefaEspera(1000);
+		//TarefaContinua(2);
 	
 	}
 }
@@ -117,8 +121,9 @@ void tarefa_2(void)
 	for(;;)
 	{
 		b++;
-		TarefaSuspende(2);	
+		//TarefaSuspende(2);	
 		port_pin_set_output_level(LED_0_PIN, !LED_0_ACTIVE); 	/* Turn LED off. */
+		TarefaEspera(500);
 	}
 }
 
