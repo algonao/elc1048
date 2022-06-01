@@ -1,47 +1,39 @@
-/*
- * Inclusao de arquivos de cabecalhos
- */
 #include <asf.h>
 #include "stdint.h"
 #include "multitarefas.h"
-#include "stdlib.h"
 
 /*
  * Prototipos das tarefas
  */
-
-void tarefa_produtor(void);
-void tarefa_consumidor(void);
-void tarefa_ociosa(void);
-
-
+void tarefa_1(void);
+void tarefa_2(void);
+void tarefa_3(void);
+void tarefa_4(void);
+void tarefa_5(void);
+void tarefa_6(void);
 
 
 /*
  * Configuracao dos tamanhos das pilhas
  */
-
+#define TAM_PILHA_1			(TAM_MINIMO_PILHA + 24)
+#define TAM_PILHA_2			(TAM_MINIMO_PILHA + 24)
 #define TAM_PILHA_3			(TAM_MINIMO_PILHA + 24)
 #define TAM_PILHA_4			(TAM_MINIMO_PILHA + 24)
-#define TAM_PILHA_OCIOSA    (TAM_MINIMO_PILHA + 24)
-
+#define TAM_PILHA_5			(TAM_MINIMO_PILHA + 24)
+#define TAM_PILHA_6			(TAM_MINIMO_PILHA + 24)
+#define TAM_PILHA_OCIOSA	(TAM_MINIMO_PILHA + 24)
 
 /*
  * Declaracao das pilhas das tarefas
  */
-
+uint32_t PILHA_TAREFA_1[TAM_PILHA_1];
+uint32_t PILHA_TAREFA_2[TAM_PILHA_2];
 uint32_t PILHA_TAREFA_3[TAM_PILHA_3];
 uint32_t PILHA_TAREFA_4[TAM_PILHA_4];
+uint32_t PILHA_TAREFA_5[TAM_PILHA_5];
+uint32_t PILHA_TAREFA_6[TAM_PILHA_6];
 uint32_t PILHA_TAREFA_OCIOSA[TAM_PILHA_OCIOSA];
-
-
-
-#define TAM_BUFFER 10
-uint8_t buffer[TAM_BUFFER]; /* declaracao de um buffer (vetor) ou fila circular */
-
-semaforo_t SemaforoCheio = {0,0}; /* declaracao e inicializacao de um semaforo */
-semaforo_t SemaforoVazio = {TAM_BUFFER,0}; /* declaracao e inicializacao de um semaforo */
-
 
 /*
  * Funcao principal de entrada do sistema
@@ -49,52 +41,103 @@ semaforo_t SemaforoVazio = {TAM_BUFFER,0}; /* declaracao e inicializacao de um s
 int main(void)
 {
 	system_init();
-	
 
-		/* Parametros: ponteiro, nome, ponteiro da pilha, tamanho da pilha, prioridade da tarefa */
-	CriarTarefa(tarefa_produtor, "Tarefa 3", PILHA_TAREFA_3, TAM_PILHA_3, 1); //produtor
+	/* Criacao das tarefas */
+	/* Parametros: ponteiro, nome, ponteiro da pilha, tamanho da pilha, prioridade da tarefa */
 
-	CriarTarefa(tarefa_consumidor, "Tarefa 4", PILHA_TAREFA_4, TAM_PILHA_4, 2); //consumidor com prioridade maior
-	
+	CriaTarefa(tarefa_1, "Tarefa 1", PILHA_TAREFA_1, TAM_PILHA_1, 5);
+
+	CriaTarefa(tarefa_2, "Tarefa 2", PILHA_TAREFA_2, TAM_PILHA_2, 4);
+
+	CriaTarefa(tarefa_3, "Tarefa 3", PILHA_TAREFA_3, TAM_PILHA_3, 3);
+
+	CriaTarefa(tarefa_4, "Tarefa 4", PILHA_TAREFA_4, TAM_PILHA_4, 2);
+
+	CriaTarefa(tarefa_5, "Tarefa 5", PILHA_TAREFA_5, TAM_PILHA_5, 1);
+
+	CriaTarefa(tarefa_6, "Tarefa 6", PILHA_TAREFA_6, TAM_PILHA_6, 6);
+
 	/* Cria tarefa ociosa do sistema */
 	CriaTarefa(tarefa_ociosa,"Tarefa ociosa", PILHA_TAREFA_OCIOSA, TAM_PILHA_OCIOSA, 0);
-	
+
 	/* Configura marca de tempo */
 	ConfiguraMarcaTempo();   
-	
+
 	/* Inicia sistema multitarefas */
-	IniciaMultitarefas();
-	
+;	IniciaMultitarefas();
+
 	/* Nunca chega aqui */
 	while (1)
 	{
 	}
 }
 
+ uint32_t cont_1 = 0;
+ uint32_t cont_2 = 0;
+ uint32_t cont_3 = 0;
+ uint32_t cont_4 = 0;
+ uint32_t cont_5 = 0;
+static uint32_t total = 0;
 
-uint8_t i, j; 
-
-
-void tarefa_produtor(void) //produtor
+void tarefa_1(void)
 {
-	for(;;) 
+	for (;;)
 	{
-	SemaforoAguarda(&SemaforoVazio);
-	buffer[i] = rand()%10;
-	i=(i+1)%TAM_BUFFER;
-	SemaforoLibera(&SemaforoCheio);
+		cont_1++;
+		TarefaSuspende(1);
 	}
 }
-void tarefa_consumidor(void) //consumidor
+
+void tarefa_2(void)
+{
+	 for (;;)
+	 {
+		 cont_2++;
+		 TarefaContinua(1);
+		 TarefaSuspende(2);
+	 }
+}
+
+void tarefa_3(void)
+{
+	 for (;;)
+	 {
+		 cont_3++;
+	    TarefaContinua(2);
+		TarefaSuspende(3);
+	 }
+}
+
+void tarefa_4(void)
+{
+	for (;;)
+	{
+		cont_4++;
+		TarefaContinua(3);
+		TarefaSuspende(4);
+	}
+}
+
+void tarefa_5(void)
+{
+	for (;;)
+	{
+		cont_5++;
+		TarefaContinua(4);
+	}
+
+}
+
+void tarefa_6(void)
 {
 
-	uint16_t consome; 
-	for(;;)
-	{
-		SemaforoAguarda(&SemaforoCheio);
-		consome = buffer[j];
-		j = (j+1)%TAM_BUFFER;
-		SemaforoLibera(&SemaforoVazio);
-
-	}
+for (;;)
+{
+	TarefaSuspende(1);
+	TarefaSuspende(2);
+	TarefaSuspende(3);
+	TarefaSuspende(4);
+	TarefaEspera(1000);
+	total = cont_1 + cont_2 + cont_3 + cont_4 + cont_5; 
+}
 }
